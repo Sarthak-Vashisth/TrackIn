@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-from . import signup, signin, commodity, create_commodities
+from . import signup, signin, commodity, create_commodities, delete_commodity
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^signup/$', signup.SignupUser.as_view(), name='signup'),
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^get_commodities_details/$', commodity.GetCommoditiesDetails.as_view(), name='GetCommoditiesDetails'),
     url(r'^get_commodities_list/$', commodity.GetCommoditiesList.as_view(), name='GetCommoditiesList'),
     url(r'^create_commodities/$', create_commodities.CreateCommodities.as_view(), name='CreateCommodities'),
+    url(r'^delete_commodities/$', delete_commodity.DeleteCommodities.as_view(), name='DeleteCommodities'),
 ]

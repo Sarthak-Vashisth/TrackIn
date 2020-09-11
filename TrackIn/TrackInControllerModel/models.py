@@ -41,7 +41,7 @@ class commodities_buy_sell_main(models.Model):
     commodity_name = models.CharField(max_length=200, blank=True, null=True)
     buy_or_sell = models.CharField(max_length=2, blank=True, null=True)
     price = models.BigIntegerField(blank=True, null=True)
-    buy_sell_date = models.DateField(blank=True, null=True)
+    buy_sell_date = models.DateTimeField(blank=True, null=True)
     created_by = models.CharField(max_length=100, blank=True, null=True)
     created_on = models.DateTimeField(blank=True, null=True)
     created_reference_id = models.CharField(max_length=100, blank=True, null=True)

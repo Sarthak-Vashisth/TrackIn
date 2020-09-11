@@ -72,6 +72,7 @@ function set_data_in_datatable(result){
     var main_arr = new Array()
     for (i=0;i<result.length;i++){
         var arr = new Array()
+        var temp_obj = {}
         arr.push(result[i].commodity_name);
         if (result[i].buy_or_sell == 'B'){
             arr.push("Buy");
@@ -81,6 +82,15 @@ function set_data_in_datatable(result){
         }
         arr.push(result[i].price);
         arr.push(result[i].buy_sell_date);
+        arr.push(result[i].serial_id);
+        temp_obj['serial_id'] = result[i].serial_id
+        temp_obj['buy_sell_date'] = result[i].buy_sell_date
+        temp_obj['price'] = result[i].price
+        temp_obj['buy_or_sell'] = result[i].buy_or_sell
+        temp_obj['created_by'] = result[i].created_by
+        temp_obj['created_on'] = result[i].created_on
+        temp_obj['created_reference_id'] = result[i].created_reference_id
+        arr.push(temp_obj)
         main_arr.push(arr);
     }
     $('#datatable_main').DataTable({
@@ -96,7 +106,7 @@ function set_data_in_datatable(result){
             targets: 4,
             "width": "4%",
             render: function (data, type, full, meta) {                         
-                return '<button class="btn"><i class="fa fa-trash"></i></button>';
+                return '<button class="btn" onclick="delete_row(this)"><i class="fa fa-trash"></i></button>';
                   
               }
        }],
@@ -260,6 +270,61 @@ function signup(){
             console.log(result.responseJSON.status_code);
             alert(result.responseJSON.status_code);
             //$("#message").text("Somethong went wrong");
+        }
+
+    });
+}
+
+
+
+function delete_row(obj){
+
+    var row_data = []
+    var table = $('#datatable_main').DataTable()
+    var data = table.row( $(obj).parents('tr') ).data();
+    row_data.push(data[5])
+    $.ajax({
+        type:"post",
+        url:"http://127.0.0.1:8000/delete_commodities/",
+        crossDomain:true,
+        contentType: "application/json",
+        beforeSend: function (xhr) {
+            token = localStorage.getItem('access_token')
+            token_str = 'Bearer ' + token
+            xhr.setRequestHeader('Authorization', token_str);
+        },
+        data:JSON.stringify(row_data),
+        success:function(result){
+            console.log("Hello")
+            console.log(result);
+            $.ajax({
+                type:"get",
+                url:"http://127.0.0.1:8000/get_commodities_details/",
+                crossDomain:true,
+                contentType: "application/json",
+                beforeSend: function (xhr) {
+                    token = localStorage.getItem('access_token')
+                    token_str = 'Bearer ' + token
+                    xhr.setRequestHeader('Authorization', token_str);
+                },
+                success:function(result){
+                    console.log("Hello")
+                    console.log(result);
+                    set_data_in_datatable(result)
+                    //$("#create_container").show()
+                },
+                error:function(result){
+                    console.log(result.responseJSON.status_code);
+                    alert(result.responseJSON.status_code);
+                    //$("#message").text("Wrong Username or PAssword");
+                }
+    
+            });
+        },
+        error:function(result){
+            console.log(result.responseJSON.status_code);
+            alert(result.responseJSON.status_code);
+            //$("#message").text("Wrong Username or PAssword");
         }
 
     });

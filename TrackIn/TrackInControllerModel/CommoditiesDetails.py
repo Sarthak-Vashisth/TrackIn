@@ -20,7 +20,7 @@ class CommoditiesDetailsController():
             usr_name = request.userinfo['username']
             user_obj = User.objects.get(username=usr_name)
             print(" user_obj ",user_obj.id)
-            result = list(commodities_buy_sell_main.objects.filter(user_id = user_obj.id).values())
+            result = list(commodities_buy_sell_main.objects.filter(user_id = user_obj.id,record_status='Active').values())
             print(" result ::: ",result)
             return result
         except Exception as e:
